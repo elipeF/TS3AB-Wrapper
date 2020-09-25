@@ -13,11 +13,46 @@ Simple node.js api wrapper for TS3AUDIOBOT with:
 
 You can assign two types of rights "admin" or "user" see rights-parser.service.ts
 
+Defaults:
+admin
+
+```
+'+': '*',
+'-': [],
+```
+
+user
+
+```
+ '+': [
+          'cmd.play',
+          'cmd.pause',
+          'cmd.stop',
+          'cmd.seek',
+          'cmd.volume',
+          'cmd.list.*',
+          'cmd.add',
+          'cmd.clear',
+          'cmd.previous',
+          'cmd.next',
+          'cmd.random.*',
+          'cmd.repeat.*',
+          'cmd.history.add',
+          'cmd.history.from',
+          'cmd.history.id',
+          'cmd.history.last',
+          'cmd.history.play',
+          'cmd.history.till',
+          'cmd.history.title',
+        ],
+        '-': [],
+```
+
 ### Installation
 
 It is recommended to use the image docker with docker image of TS3AUDIOBOT
 
-```sh
+```docker-compose
 version: "3"
 services:
   ts3ab:

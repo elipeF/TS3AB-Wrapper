@@ -24,7 +24,7 @@ export class BotService {
     private tomlReader: TomlReaderService,
     private httpService: HttpService,
     private rightsParser: RightsParserService,
-  ) { }
+  ) {}
 
   async getInf(id: string) {
     const bot = await this.findBot(id);
@@ -40,7 +40,9 @@ export class BotService {
       status: bot.Status,
       address,
       name,
-      channel: parseInt(channel.replace('/', '')) ? parseInt(channel.replace('/', '')) : 0,
+      channel: parseInt(channel.replace('/', ''))
+        ? parseInt(channel.replace('/', ''))
+        : 0,
     };
   }
 
@@ -83,8 +85,14 @@ export class BotService {
     try {
       return {
         bot: rule[0].bot[0],
-        users: { useruid: rule[0].useruid, groupid: rule[0].groupid },
-        admins: { useruid: rule[0].rule[0].useruid, groupid: rule[0].rule[0].groupid },
+        users: {
+          useruid: rule[0].rule[1].useruid,
+          groupid: rule[0].rule[1].groupid,
+        },
+        admins: {
+          useruid: rule[0].rule[0].useruid,
+          groupid: rule[0].rule[0].groupid,
+        },
       };
     } catch (e) {
       throw new HttpException('Bot not found', HttpStatus.NOT_FOUND);
@@ -94,7 +102,10 @@ export class BotService {
   async addRights(id: string, request: RightsRequest) {
     try {
       if (request.groupid == null && request.useruid == null) {
-        throw new HttpException('UserID or GroupID must be provided', HttpStatus.BAD_REQUEST)
+        throw new HttpException(
+          'UserID or GroupID must be provided',
+          HttpStatus.BAD_REQUEST,
+        );
       }
       const rights = await this.tomlReader.readFileAsyncAndParse();
       rights.rule = this.rightsParser.addRight(id, request, rights.rule);
@@ -161,7 +172,7 @@ export class BotService {
       await this.httpService
         .get(
           process.env.TS3AUDIOBOT_URL +
-          `settings/bot/set/${id}/language/${settings.language}`,
+            `settings/bot/set/${id}/language/${settings.language}`,
         )
         .toPromise();
     }
@@ -169,9 +180,9 @@ export class BotService {
       await this.httpService
         .get(
           process.env.TS3AUDIOBOT_URL +
-          `settings/bot/set/${id}/connect.name/${encodeURIComponent(
-            settings.name,
-          )}`,
+            `settings/bot/set/${id}/connect.name/${encodeURIComponent(
+              settings.name,
+            )}`,
         )
         .toPromise();
       if (enable) {
@@ -179,9 +190,9 @@ export class BotService {
           await this.httpService
             .get(
               process.env.TS3AUDIOBOT_URL +
-              `bot/use/${bot.Id}/(/bot/name/${encodeURIComponent(
-                settings.name,
-              )})`,
+                `bot/use/${bot.Id}/(/bot/name/${encodeURIComponent(
+                  settings.name,
+                )})`,
             )
             .toPromise();
         } catch (e) {
@@ -204,9 +215,9 @@ export class BotService {
       await this.httpService
         .get(
           process.env.TS3AUDIOBOT_URL +
-          `settings/bot/set/${id}/connect.channel/${encodeURIComponent(
-            '/' + settings.channel,
-          )}`,
+            `settings/bot/set/${id}/connect.channel/${encodeURIComponent(
+              '/' + settings.channel,
+            )}`,
         )
         .toPromise();
       if (enable) {
@@ -214,9 +225,9 @@ export class BotService {
           await this.httpService
             .get(
               process.env.TS3AUDIOBOT_URL +
-              `bot/use/${bot.Id}/(/bot/move/${encodeURIComponent(
-                settings.channel,
-              )})`,
+                `bot/use/${bot.Id}/(/bot/move/${encodeURIComponent(
+                  settings.channel,
+                )})`,
             )
             .toPromise();
         } catch (e) {
@@ -240,9 +251,9 @@ export class BotService {
       await this.httpService
         .get(
           process.env.TS3AUDIOBOT_URL +
-          `settings/bot/set/${id}/connect.address/${encodeURIComponent(
-            settings.address,
-          )}`,
+            `settings/bot/set/${id}/connect.address/${encodeURIComponent(
+              settings.address,
+            )}`,
         )
         .toPromise();
       if (enable) {
@@ -271,7 +282,7 @@ export class BotService {
           await this.httpService
             .get(
               process.env.TS3AUDIOBOT_URL +
-              `bot/use/${bot.Id}/(/bot/disconnect)`,
+                `bot/use/${bot.Id}/(/bot/disconnect)`,
             )
             .toPromise();
         } catch (e) {

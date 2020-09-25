@@ -3,35 +3,22 @@ import { Rights } from 'src/rights';
 import { Right } from 'src/right';
 import { RightsRequest } from 'src/rights-request';
 
+interface NewRight {
+  bot: string[];
+  rule: { [index: number]: Right };
+}
+
 @Injectable()
 export class RightsParserService {
-  private content: Rights = {
+  private content: NewRight = {
     bot: [],
-    useruid: [],
-    groupid: [],
-    '+': [
-      'cmd.play',
-      'cmd.pause',
-      'cmd.stop',
-      'cmd.seek',
-      'cmd.volume',
-      'cmd.list.*',
-      'cmd.add',
-      'cmd.clear',
-      'cmd.previous',
-      'cmd.next',
-      'cmd.random.*',
-      'cmd.repeat.*',
-      'cmd.history.add',
-      'cmd.history.from',
-      'cmd.history.id',
-      'cmd.history.last',
-      'cmd.history.play',
-      'cmd.history.till',
-      'cmd.history.title',
-    ],
-    '-': [],
     rule: [
+      {
+        useruid: [],
+        groupid: [],
+        '+': '*',
+        '-': [],
+      },
       {
         useruid: [],
         groupid: [],
@@ -81,11 +68,7 @@ export class RightsParserService {
     }
   }
 
-  addRight(
-    id: string,
-    request: RightsRequest,
-    rights: Rights[],
-  ): Rights[] {
+  addRight(id: string, request: RightsRequest, rights: Rights[]): Rights[] {
     const index: number = this.findBotIndex(rights, id);
     const { level, ...props } = request;
 
@@ -93,18 +76,14 @@ export class RightsParserService {
       if (level === 'admin') {
         rights[index].rule[0][type].push(props[type]);
       } else {
-        rights[index][type].push(props[type]);
+        rights[index].rule[1][type].push(props[type]);
       }
     }
 
     return rights;
   }
 
-  removeRight(
-    id: string,
-    request: RightsRequest,
-    rights: Rights[],
-  ): Rights[] {
+  removeRight(id: string, request: RightsRequest, rights: Rights[]): Rights[] {
     const index: number = this.findBotIndex(rights, id);
     const { level, ...props } = request;
 
@@ -118,9 +97,9 @@ export class RightsParserService {
           throw new HttpException('Right not exist', HttpStatus.NOT_FOUND);
         }
       } else {
-        const indexOfRight = rights[index][type].indexOf(props[type]);
+        const indexOfRight = rights[index].rule[1][type].indexOf(props[type]);
         if (indexOfRight !== -1) {
-          rights[index][type].splice(indexOfRight, 1);
+          rights[index].rule[1][type].splice(indexOfRight, 1);
           return rights;
         } else {
           throw new HttpException('Right not exist', HttpStatus.NOT_FOUND);
@@ -128,7 +107,6 @@ export class RightsParserService {
       }
     }
   }
-
 
   private findBotIndex(rights: Rights[], id: string): number {
     const index: number = rights.findIndex((el: Right) => {

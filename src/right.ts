@@ -2,6 +2,6 @@ export class Right {
   readonly bot?: string[];
   readonly useruid: string[];
   readonly groupid: number[];
-  readonly '+': string[];
-  readonly '-': string[];
+  readonly '+': string | string[];
+  readonly '-': string | string[];
 }
