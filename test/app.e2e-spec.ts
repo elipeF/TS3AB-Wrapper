@@ -311,7 +311,7 @@ describe('Bot rights', () => {
 
   it('Should remove admin rights uid', () => {
     return request(app)
-      .delete(`/bot/${id}/rights`)
+      .patch(`/bot/${id}/rights`)
       .send({ useruid: uid, level: 'admin' })
       .expect(200);
   });
@@ -331,7 +331,7 @@ describe('Bot rights', () => {
 
   it('Should remove admin rights gid', () => {
     return request(app)
-      .delete(`/bot/${id}/rights`)
+      .patch(`/bot/${id}/rights`)
       .send({ groupid: gid, level: 'admin' })
       .expect(200);
   });
@@ -392,7 +392,7 @@ describe('Bot rights', () => {
 
   it('Should remove user uniq rights', () => {
     return request(app)
-      .delete(`/bot/${id}/rights`)
+      .patch(`/bot/${id}/rights`)
       .send({ useruid: uid, level: 'user' })
       .expect(200);
   });
@@ -413,7 +413,7 @@ describe('Bot rights', () => {
 
   it('Should remove user gid rights', () => {
     return request(app)
-      .delete(`/bot/${id}/rights`)
+      .patch(`/bot/${id}/rights`)
       .send({ groupid: gid, level: 'user' })
       .expect(200);
   });
