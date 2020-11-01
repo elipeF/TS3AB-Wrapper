@@ -18,6 +18,12 @@ interface BotObj {
   Status: number;
 }
 
+function unicodeURLEncode(text) {
+  return encodeURIComponent(text).replace(/[!'()*]/g, function(c) {
+      return ('%' + c.charCodeAt(0).toString(16).toUpperCase());
+  });
+}
+
 @Injectable()
 export class BotService {
   constructor(
@@ -43,6 +49,9 @@ export class BotService {
       channel: parseInt(channel.replace('/', ''))
         ? parseInt(channel.replace('/', ''))
         : 0,
+      commander: /(?<=bot commander )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] === "on" ? true : false ?? false,
+      song: /(?<=play )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? null,
+      volume: +(/(?<=vol )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? 50)
     };
   }
 
@@ -270,6 +279,22 @@ export class BotService {
           .get(process.env.TS3AUDIOBOT_URL + `bot/connect/template/${id}`)
           .toPromise();
       }
+    }
+    if(settings.commander !== undefined || settings.song || settings.volume) {
+      const currentSettings = await this.getInf(id);
+      let command = '!xecute';
+      
+      command = command + `(!bot commander ${(settings.commander ?? currentSettings.commander) ? 'on' : 'off'})`;
+      command = command + `(!play ${settings.song ?? currentSettings.song})`;
+      command = command + `(!vol ${settings.volume ?? currentSettings.volume})`;
+
+      await this.httpService
+        .get(
+          process.env.TS3AUDIOBOT_URL +
+            `settings/bot/set/${id}/events.onconnect/${unicodeURLEncode(command)}`,
+        )
+        .toPromise();
+
     }
   }
 

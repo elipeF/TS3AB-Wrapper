@@ -33,6 +33,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
+    "uri-js": "^4.4.0",
+    "urlencode": "^1.1.0",
     "uuid": "^8.0.0"
   },
   "devDependencies": {

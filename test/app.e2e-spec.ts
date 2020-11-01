@@ -77,6 +77,9 @@ describe('Bot edit', () => {
         expect(body.address).toBeDefined();
         expect(body.name).toEqual('TS3AudioBot');
         expect(body.channel).toBeDefined();
+        expect(body.song).toBeNull();
+        expect(body.volume).toBe(50);
+        expect(body.commander).toBe(false);
       })
       .expect(200);
   });
@@ -155,6 +158,75 @@ describe('Bot edit', () => {
       .get('/bot/' + id)
       .expect(({ body }) => {
         expect(body.language).toEqual('pl');
+      })
+      .expect(200);
+  });
+
+  it('Should change bot volume', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ volume: 2 })
+      .expect(200);
+  });
+
+  it('Should reject change bot volume', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ volume: '2' })
+      .expect(400);
+  });
+
+  it('Should return new volume', () => {
+    return request(app)
+      .get('/bot/' + id)
+      .expect(({ body }) => {
+        expect(body.volume).toEqual(2);
+      })
+      .expect(200);
+  });
+
+  it('Should change bot commander', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ commander: true })
+      .expect(200);
+  });
+
+  it('Should reject change bot commander', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ commander: 'true' })
+      .expect(400);
+  });
+
+  it('Should return new commander', () => {
+    return request(app)
+      .get('/bot/' + id)
+      .expect(({ body }) => {
+        expect(body.commander).toEqual(true);
+      })
+      .expect(200);
+  });
+
+  it('Should change bot song', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ song: "https://www.youtube.com/watch?v=AlTM7RjPHqQ" })
+      .expect(200);
+  });
+
+  it('Should reject change bot song', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ song: 2 })
+      .expect(400);
+  });
+
+  it('Should return new song', () => {
+    return request(app)
+      .get('/bot/' + id)
+      .expect(({ body }) => {
+        expect(body.song).toEqual("https://www.youtube.com/watch?v=AlTM7RjPHqQ");
       })
       .expect(200);
   });

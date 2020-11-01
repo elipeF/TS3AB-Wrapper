@@ -5,6 +5,7 @@ import {
   MaxLength,
   IsNumber,
   IsIn,
+  IsBoolean,
 } from 'class-validator';
 
 export class BotEdit {
@@ -14,4 +15,7 @@ export class BotEdit {
   @IsOptional() @IsString() @MinLength(3) @MaxLength(30) readonly name;
   @IsOptional() @IsNumber() readonly channel;
   @IsOptional() readonly address;
+  @IsOptional() @IsBoolean() readonly commander;
+  @IsOptional() @IsNumber() readonly volume;
+  @IsOptional() @IsString() readonly song;
 }
