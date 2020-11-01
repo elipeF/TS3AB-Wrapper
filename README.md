@@ -8,6 +8,10 @@ Simple node.js api wrapper for TS3AUDIOBOT with:
 - Start/Stop bot
 - Create bot
 - Remove bot
+- Edit bot
+- Enable bot commander on startup
+- Set default song on startup
+- Set default volume on startup
 
 # Two types of rights
 
