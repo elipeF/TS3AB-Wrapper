@@ -77,7 +77,7 @@ describe('Bot edit', () => {
         expect(body.address).toBeDefined();
         expect(body.name).toEqual('TS3AudioBot');
         expect(body.channel).toBeDefined();
-        expect(body.song).toBeNull();
+        expect(body.song).toBe('');
         expect(body.volume).toBe(50);
         expect(body.commander).toBe(false);
       })

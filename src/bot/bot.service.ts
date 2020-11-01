@@ -50,7 +50,7 @@ export class BotService {
         ? parseInt(channel.replace('/', ''))
         : 0,
       commander: /(?<=bot commander )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] === "on" ? true : false ?? false,
-      song: /(?<=play )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? null,
+      song: /(?<=play )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? '',
       volume: +(/(?<=vol )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? 50)
     };
   }
