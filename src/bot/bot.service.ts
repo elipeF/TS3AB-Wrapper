@@ -68,16 +68,14 @@ export class BotService {
       .get(process.env.TS3AUDIOBOT_URL + `bot/use/${bot.Id}/(/server/tree)`)
       .toPromise();
 
-    let users = [];
-    for (const key in server.data.Clients) {
-      if (parseInt(key) !== server.data.OwnClient) {
-        users.push({
+      const users = Object.keys(server.data.Clients)
+      .filter(key => +key !== server.data.OwnClient ? true : false)
+      .map(key => { 
+        return {
           cid: server.data.Clients[key].Channel,
           uniq: server.data.Clients[key].Uid,
           name: server.data.Clients[key].Name,
-        });
-      }
-    }
+        }});
     return {
       botcid: server.data.Clients[server.data.OwnClient].Channel,
       users,
