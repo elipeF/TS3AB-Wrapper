@@ -72,12 +72,12 @@ export class RightsParserService {
     const index: number = this.findBotIndex(rights, id);
     const { level, ...props } = request;
 
-    const type = Object.keys(props);
+    const type = Object.keys(props)[0];
 
     if (level === 'admin') {
-      rights[index].rule[0][type[0]].push(props[type[0]]);
+      rights[index].rule[0][type].push(props[type]);
     } else {
-      rights[index].rule[1][type[0]].push(props[type[0]]);
+      rights[index].rule[1][type].push(props[type]);
     }
 
     return rights;
@@ -87,7 +87,8 @@ export class RightsParserService {
     const index: number = this.findBotIndex(rights, id);
     const { level, ...props } = request;
 
-    for (const type of Object.keys(props)) {
+    const type = Object.keys(props)[0];
+
       if (level === 'admin') {
         const indexOfRight = rights[index].rule[0][type].indexOf(props[type]);
         if (indexOfRight !== -1) {
@@ -105,7 +106,6 @@ export class RightsParserService {
           throw new HttpException('Right not exist', HttpStatus.NOT_FOUND);
         }
       }
-    }
   }
 
   private findBotIndex(rights: Rights[], id: string): number {
