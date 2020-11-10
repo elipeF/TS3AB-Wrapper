@@ -330,19 +330,12 @@ export class BotService {
   }
 
   async count() {
-    let bots = 0;
-    let running = 0;
     try {
       const req = await this.httpService
         .get(process.env.TS3AUDIOBOT_URL + 'bot/list')
         .toPromise();
-      for (const bot of req.data) {
-        bots++;
-        if (bot.Status === 2) {
-          running++;
-        }
-      }
-      return { bots, running };
+      const bots = req.data.reduce((acc, bot) => bot.Status === 2 ? {running: acc.running + 1, total: acc.total + 1} :{running: acc.running, total: acc.total + 1}, {running: 0, total: 0})
+      return { bots: bots.total, running: bots.running };
     } catch (e) {
       throw new HttpException(
         'TS3AUDIOBOT DOWN',
