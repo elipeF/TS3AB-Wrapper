@@ -72,12 +72,12 @@ export class RightsParserService {
     const index: number = this.findBotIndex(rights, id);
     const { level, ...props } = request;
 
-    for (const type of Object.keys(props)) {
-      if (level === 'admin') {
-        rights[index].rule[0][type].push(props[type]);
-      } else {
-        rights[index].rule[1][type].push(props[type]);
-      }
+    const type = Object.keys(props);
+
+    if (level === 'admin') {
+      rights[index].rule[0][type[0]].push(props[type[0]]);
+    } else {
+      rights[index].rule[1][type[0]].push(props[type[0]]);
     }
 
     return rights;
