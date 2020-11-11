@@ -51,7 +51,8 @@ export class BotService {
         : 0,
       commander: /(?<=bot commander )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] === "on" ? true : false ?? false,
       song: /(?<=play )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? '',
-      volume: +(/(?<=vol )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? 50)
+      volume: +(/(?<=vol )[^\)]+(?=\))/.exec(data.events.onconnect)?.[0] ?? 50),
+      alias: data.commands.alias
     };
   }
 
@@ -293,6 +294,25 @@ export class BotService {
         )
         .toPromise();
 
+    }
+    if(settings.alias) {
+      const currentSettings = await this.getInf(id);
+      const aliastToRemove = Object.keys(currentSettings.alias)
+      .map(name => this.httpService
+        .get(
+          process.env.TS3AUDIOBOT_URL +
+            `bot/use/${bot.Id}/(/alias/remove/${name}`,
+        ).toPromise())
+      const aliastToAdd = Object.keys(settings.alias)
+      .map(name => this.httpService
+        .get(
+          process.env.TS3AUDIOBOT_URL +
+            `bot/use/${bot.Id}/(/alias/add/${name}/${unicodeURLEncode(
+              settings.alias[name],
+            )})`,
+        ).toPromise())
+
+      await Promise.all([...aliastToRemove, ...aliastToAdd]).catch((e) => {throw new HttpException(e, 500)})
     }
   }
 

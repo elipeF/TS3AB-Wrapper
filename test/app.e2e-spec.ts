@@ -251,6 +251,29 @@ describe('Bot edit', () => {
     }, 500);
   });
 
+  it('Should change bot alias', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ alias: {"yts": "!search play (!param 0)"} })
+      .expect(200);
+  });
+
+  it('Should reject change bot alias', () => {
+    return request(app)
+      .patch('/bot/' + id)
+      .send({ alias: '{}' })
+      .expect(400);
+  });
+
+  it('Should return new alias', () => {
+    return request(app)
+      .get('/bot/' + id)
+      .expect(({ body }) => {
+        expect(body.alias).toEqual({"yts": "!search play (!param 0)"});
+      })
+      .expect(200);
+  });
+
   it('Should stop bot', () => {
     return request(app)
       .get('/bot/' + id + '/stop')

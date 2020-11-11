@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsIn,
   IsBoolean,
+  IsObject,
 } from 'class-validator';
 
 export class BotEdit {
@@ -18,4 +19,5 @@ export class BotEdit {
   @IsOptional() @IsBoolean() readonly commander;
   @IsOptional() @IsNumber() readonly volume;
   @IsOptional() @IsString() readonly song;
+  @IsOptional() @IsObject() readonly alias;
 }
